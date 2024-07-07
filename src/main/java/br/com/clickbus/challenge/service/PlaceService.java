@@ -8,9 +8,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.lang3.NotImplementedException;
 
 @Service
 @AllArgsConstructor
@@ -19,22 +19,34 @@ public class PlaceService {
     private PlaceRepository repository;
 
     public List<Place> findAll() {
-        throw new NotImplementedException("Metodo nao implementado");
+        return repository.findAll();
     }
 
     public Optional<Place> findById(@NotNull Long id) {
-        throw new NotImplementedException("Metodo nao implementado");
+        return repository.findById(id);
     }
 
     public Place save(@NotNull Place place) {
-        throw new NotImplementedException("Metodo nao implementado");
+        return repository.save(place);
     }
 
     public List<Place> findByName(@NotNull String name) {
-        throw new NotImplementedException("Metodo nao implementado");
+        return repository.findByName(name);
     }
 
     public Place alter(@NotNull Place place,@NotNull PlaceDTO placeDTO) {
-        throw new NotImplementedException("Metodo nao implementado");
+        Place updatePlace = new Place(
+                place.getId(),
+                placeDTO.getName(),
+                placeDTO.getSlug(),
+                placeDTO.getCity(),
+                placeDTO.getState(),
+                place.getCreatedAt(),
+                LocalDateTime.now()
+        );
+
+        repository.save(updatePlace);
+
+        return updatePlace;
     }
 }

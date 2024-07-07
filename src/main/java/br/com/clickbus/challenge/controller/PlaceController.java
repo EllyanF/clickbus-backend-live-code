@@ -9,21 +9,16 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Api("places")
 @RestController
 @RequestMapping("places")
 public class PlaceController {
-
+    @Autowired
     private PlaceService service;
 
     @PostMapping
@@ -36,6 +31,12 @@ public class PlaceController {
         return service.findById(id)
                       .map(place -> ResponseEntity.ok(place.convertToDTO()))
                       .orElseThrow(() -> new PlaceNotFoundException(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity findByName(@RequestParam String name) {
+        List<Place> placeList = service.findByName(name);
+        return placeList.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(PlaceDTO.convertToList(placeList));
     }
 
     @GetMapping
